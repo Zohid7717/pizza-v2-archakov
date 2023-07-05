@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useContext, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useContext, useCallback, useRef, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import qs from 'qs';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { selectFilter, setCategoryId, setCurrentPage, setFilters } from '../redux/slices/FilterSlice';
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
@@ -12,7 +11,7 @@ import Sort, { sortList } from '../components/Sort';
 import PizzaBlock from '../components/pizzaBlock/PizzaBlock';
 import Skeleton from '../components/pizzaBlock/Skeleton';
 
-const Home = () => {
+const Home: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const isSearch = useRef(false);
@@ -21,12 +20,12 @@ const Home = () => {
   const { items, status } = useSelector(selectPizzaData);
   const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter);
 
-  const onChangeCategory = (id) => {
-    dispatch(setCategoryId(id));
+  const onChangeCategory = (idx: number) => {
+    dispatch(setCategoryId(idx));
   };
 
-  const onChangePage = number => {
-    dispatch(setCurrentPage(number))
+  const onChangePage = (page:number) => {
+    dispatch(setCurrentPage(page))
   }
 
   const getPizzas = async () => {
@@ -35,7 +34,10 @@ const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    dispatch(fetchPizzas({ sortBy, order, category, search, currentPage }))
+    dispatch(
+      // @ts-ignore
+      fetchPizzas({ sortBy, order, category, search, currentPage }))
+    window.scrollTo(0, 0);
   }
   useEffect(() => {
     if (window.location.search) {
@@ -65,20 +67,20 @@ const Home = () => {
     isMounted.current = true;
   }, [categoryId, sort.sortProperty, currentPage]);
 
-  const pizzas = items.map(obj => (<PizzaBlock key={obj.id} {...obj} />))
+  const pizzas = items.map((obj: any) => (<PizzaBlock key={obj.id} {...obj} />))
   const skeletons = [...new Array(4)].map((_, index) => <Skeleton key={index} />)
   return (
     <>
       <div className="container">
         <div className="content__top">
           <Categories value={categoryId} onChangeCategory={onChangeCategory} />
-          <Sort value={sort} />
+          <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         {
           status === 'error'
             ? (<div className="cart cart--empty">
-              <h2>Извените что-то пошло не так!!! <icon>😕</icon></h2>
+              <h2>Извените что-то пошло не так!!! <span>😕</span></h2>
             </div>)
             : (<div className="content__items"> {status === 'loading' ? skeletons : pizzas}</div>)
         }
