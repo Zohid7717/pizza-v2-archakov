@@ -6,22 +6,20 @@ const CardItem = ({ id, name, type, sizes, price, count, imageUrl }) => {
   const dispatch = useDispatch();
 
   const onClickPlus = () => {
-    dispatch(addItem({id}))
+    dispatch(addItem({ id }))
   }
-  
+
   const onClickMinus = () => {
     dispatch(minusItem(id))
   }
-  
+
   const onClickRemove = () => {
     dispatch(removeItem(id))
   }
   return (
     <div className="cart__item">
       <div className="cart__item-img">
-        <img className="pizza-block__image"
-          src={imageUrl}
-          alt="Pizza" />
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
       </div>
       <div className="cart__item-info">
         <h3> {name}</h3>
