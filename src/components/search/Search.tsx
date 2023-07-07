@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 
 import styles from './Search.module.scss';
 import { useDispatch } from 'react-redux';
-import { setSearchValue } from '../../redux/slices/FilterSlice';
+import { setSearchValue } from '../../redux/filter/slice';
 
 const Search: FC = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const Search: FC = () => {
     }, 1000), []
   )
 
-  const onChangeInput = (event:any) => {
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value)
     updateSearchValue(event.target.value)
   }

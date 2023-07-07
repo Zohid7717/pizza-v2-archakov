@@ -170,6 +170,9 @@ body {
             display: none;
           }
         }
+        &:disabled{
+          opacity: 0.4;
+        }
       }
 
       b {
